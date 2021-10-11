@@ -21,6 +21,7 @@ namespace BMSWebAPI.Controllers
         }
 
         [HttpPost]
+        [Route("register")]
         public IActionResult Register(RegisterModel register)
         {
             var result = _userService.Register(register);

@@ -3,6 +3,7 @@ using BMSWebAPI.Entities;
 using BMSWebAPI.Enums;
 using BMSWebAPI.Models;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BMSWebAPI.Services
@@ -15,11 +16,13 @@ namespace BMSWebAPI.Services
             _context = context;
         }
 
-        public async Task<string> Add(User user)
+        public string Add(User user)
         {
-            await _context.Users.AddAsync(user);
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+        
+            _context.Users.Add(user);
 
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return user.UserId;
         }
@@ -29,7 +32,7 @@ namespace BMSWebAPI.Services
             return "R-" + new Random().Next(100, 999);
         }
 
-        public bool validateInitialDeposit(int accountType, decimal initialDeposit)
+        public bool IsValidateInitialDeposit(int accountType, decimal initialDeposit)
         {
             bool isValid = true;
 
@@ -51,9 +54,9 @@ namespace BMSWebAPI.Services
             return isValid;
         }
 
-        public async Task<int> Register(RegisterModel register)
+        public int Register(RegisterModel register)
         {
-            if (validateInitialDeposit(register.AccountType ?? 0, register.InitialDeposit ?? 0))
+            if (!IsValidateInitialDeposit(register.AccountType ?? 0, register.InitialDeposit ?? 0))
             {
                 throw new Exception("Initial minimum deposit amount for Salary=" + Configurations.salaryInitialDepositAmountLimit + " Savings="+Configurations.savingsInitialDepositAmountLimit);
             }
@@ -80,17 +83,24 @@ namespace BMSWebAPI.Services
                 GuardianName = register.GuardianName,
                 GuardianType = register.GuardianType,
                 MaritalStatus = register.MaritalStatus,
-                UserId = newUser.Result,
+                UserId = newUser,
                 CreatedDate = DateTime.Now,
                 InitialDeposit = register.InitialDeposit,
                 AccountType = register.AccountType
             };
 
-            await _context.UserDetails.AddAsync(newUserDetail);
+            _context.UserDetails.Add(newUserDetail);
 
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return newUserDetail.UserDetailId;
+        }
+
+        public User GetByUsername(string username) 
+        {
+            var result = _context.Users.FirstOrDefault(f=>f.Username == username);
+            
+            return result;
         }
     }
 }

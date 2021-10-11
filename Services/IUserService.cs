@@ -9,7 +9,8 @@ namespace BMSWebAPI.Services
 {
     public interface IUserService
     {
-        Task<string> Add(User user);
-        Task<int> Register(RegisterModel register);
+        string Add(User user);
+        int Register(RegisterModel register);
+        User GetByUsername(string username);
     }
 }

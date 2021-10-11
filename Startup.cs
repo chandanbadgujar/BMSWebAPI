@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BMSWebAPI.Entities;
+using BMSWebAPI.Helpers;
 using BMSWebAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,12 +32,27 @@ namespace BMSWebAPI
         {
 
             services.AddDbContext<BMSContext>(item => item.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddScoped<IUserService, UserService>();
             services.AddScoped<ILoanService, LoanService>();
+            services.AddScoped<JwtService>();
+            services.AddScoped<IUserService, UserService>();
 
-            //services.AddMvc();
+            services.AddMvc();
+            //.AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-            //services.AddControllers().AddNewtonsoftJson();
+            services.AddControllers().AddJsonOptions(options => {
+                options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                options.JsonSerializerOptions.DictionaryKeyPolicy = null;
+            });
+
+            //services.AddCors(options => {
+            //    options.AddPolicy("myPolicy", builder => {
+            //        builder.AllowAnyOrigin();
+            //        builder.WithHeaders("Access-Control-Allow-Origin", "*");
+            //        builder.AllowAnyMethod();
+            //        //builder.SetIsOriginAllowed(origin => true); // allow any origin
+            //    });
+            //});
+            services.AddCors();
 
             services.AddSwaggerGen();
 
@@ -51,6 +67,7 @@ namespace BMSWebAPI
                 app.UseDeveloperExceptionPage();
             }
 
+
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
@@ -59,6 +76,13 @@ namespace BMSWebAPI
             });
 
             app.UseRouting();
+
+            //app.UseCors("myPolicy");
+            app.UseCors(options => options
+            .WithOrigins(new[] { "http://localhost:3000" })
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
 
             app.UseAuthorization();
 
