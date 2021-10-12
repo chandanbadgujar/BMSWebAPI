@@ -38,7 +38,7 @@ namespace BMSWebAPI.Helpers
                     ValidateIssuer = false,
                     ValidateAudience = false,
                 }, out SecurityToken validatedToken);
-                validateToken = validatedToken;
+                validateToken = validatedToken; 
             }
             catch (Exception ex)
             {
