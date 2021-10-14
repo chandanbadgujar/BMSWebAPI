@@ -17,9 +17,17 @@ namespace BMS.Tests
         [Test]
         public void GetByUsernameSuccess()
         {
+            #region Arrange
             UserService userService = new UserService(_context);
-            var user = userService.GetByUsername("");
+            #endregion
+
+            #region Act
+            var user = userService.GetByUsername("test");
+            #endregion
+
+            #region Assert
             Assert.AreEqual(typeof(User), user);
+            #endregion
         }
     }
 }

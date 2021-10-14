@@ -27,12 +27,12 @@ namespace BMSWebAPI.Services
             return user.UserId;
         }
 
-        public string GenerateCustomerId()
+        private string GenerateCustomerId()
         {
             return "R-" + new Random().Next(100, 999);
         }
 
-        public bool IsValidateInitialDeposit(int accountType, decimal initialDeposit)
+        private bool IsValidateInitialDeposit(int accountType, decimal initialDeposit)
         {
             bool isValid = true;
 
@@ -42,14 +42,7 @@ namespace BMSWebAPI.Services
                 initialDeposit < Configurations.salaryInitialDepositAmountLimit))
             {
                 isValid = false;
-                //throw new Exception("Initial deposit amount shout be minimum " + Configurations.savingsInitialDepositAmountLimit + " for savings account.");
             }
-            //else if (accountType == (int)AccountType.Salary &&
-            //    initialDeposit < Configurations.salaryInitialDepositAmountLimit)
-            //{
-            //    isValid = false;
-            //    //throw new Exception("Initial deposit amount shout be minimum " + Configurations.salaryInitialDepositAmountLimit + " for salary account.");
-            //}
 
             return isValid;
         }
