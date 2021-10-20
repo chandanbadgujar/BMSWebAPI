@@ -8,7 +8,7 @@ namespace BMSWebAPI.Services
 {
     public interface IUserAccountDetailService
     {
-        UserAccountDetailModel Get(int userId);
+        UserAccountDetailModel Get(string userId);
         UserAccountDetailModel Upsert(UserAccountDetailModel userAccountDetailModel);
     }
 }

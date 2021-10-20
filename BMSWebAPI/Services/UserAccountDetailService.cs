@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BMSWebAPI.Services
 {
-    public class UserAccountDetailService
+    public class UserAccountDetailService: IUserAccountDetailService
     {
         BMSContext _context;
         public UserAccountDetailService(BMSContext context)
@@ -15,7 +15,7 @@ namespace BMSWebAPI.Services
             _context = context;
         }
 
-        public UserAccountDetailModel Get(int userId)
+        public UserAccountDetailModel Get(string userId)
         {
             var result = _context.UserAccountDetails.FirstOrDefault(x => x.UserId == userId);
 
@@ -56,7 +56,7 @@ namespace BMSWebAPI.Services
                 CreatedDate= userAccountDetailModel.CreatedDate
             };
 
-            if (userAccountDetailModel.UserAccountId > 0)
+            if (!string.IsNullOrEmpty(userAccountDetailModel.UserAccountId))
             {
                 accountDetail.UserAccountId = userAccountDetailModel.UserAccountId;
                 accountDetail.ModifiedDate = DateTime.Now;
@@ -65,18 +65,24 @@ namespace BMSWebAPI.Services
             }
             else
             {
+                accountDetail.UserAccountId = GenerateAccountId();
                 _context.UserAccountDetails.Add(accountDetail);
 
             }
 
             _context.SaveChanges();
 
-            if (userAccountDetailModel.UserAccountId <= 0)
+            if (string.IsNullOrEmpty(userAccountDetailModel.UserAccountId))
             {
                 userAccountDetailModel.UserAccountId = accountDetail.UserAccountId;
             }
 
             return userAccountDetailModel;
+        }
+
+        private string GenerateAccountId()
+        {
+            return Guid.NewGuid().ToString("N").Substring(0, 16);
         }
     }
 }

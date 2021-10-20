@@ -11,18 +11,38 @@ namespace BMSWebAPI.Services
     public class UserService : IUserService
     {
         BMSContext _context;
-        public UserService(BMSContext context)
+        IUserAccountDetailService _accountDetailService;
+        public UserService(BMSContext context,
+            IUserAccountDetailService accountDetailService)
         {
             _context = context;
+            _accountDetailService = accountDetailService;
         }
 
         public string Add(User user)
         {
-            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-        
-            _context.Users.Add(user);
+            try
+            {
+                user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
-            _context.SaveChanges();
+                User existingUser = null;
+
+                do
+                {
+                    user.UserId = GenerateCustomerId();
+                    existingUser = _context.Users.FirstOrDefault(f => f.UserId == user.UserId);
+                }
+                while (user.UserId == existingUser?.UserId);
+
+                _context.Users.Add(user);
+
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error creating user.");
+            }
+
 
             return user.UserId;
         }
@@ -49,7 +69,7 @@ namespace BMSWebAPI.Services
 
         public int Register(RegisterModel register)
         {
-            if (!IsValidateInitialDeposit(register.AccountType ?? 0, register.InitialDeposit ?? 0))
+            if (!IsValidateInitialDeposit(register.AccountType, register.InitialDeposit))
             {
                 throw new Exception("Initial minimum deposit amount for Salary=" + Configurations.salaryInitialDepositAmountLimit + " Savings="+Configurations.savingsInitialDepositAmountLimit);
             }
@@ -58,8 +78,7 @@ namespace BMSWebAPI.Services
             {
                 Username = register.Username,
                 Password = register.Password,
-                CreatedDate = DateTime.Now,
-                UserId = GenerateCustomerId()
+                CreatedDate = DateTime.Now
             });
 
             UserDetail newUserDetail = new UserDetail()
@@ -85,6 +104,20 @@ namespace BMSWebAPI.Services
             _context.UserDetails.Add(newUserDetail);
 
             _context.SaveChanges();
+
+            _accountDetailService.Upsert(new UserAccountDetailModel() {
+                IdentityProofType = register.IdentificationType,
+                AccountNo = register.ReferralAccountNo,
+                AccountType = register.AccountType,
+                BranchName = register.BranchName,
+                IdentityProofDocNo = register.IdentificationDocNo,
+                InitialDeposit = register.InitialDeposit,
+                ReferanceName = register.ReferralAccountName,
+                ReferenceAccountNo = register.ReferralAccountNo,
+                ReferenceAddress = register.ReferralAccountAddress,
+                UserId = newUser,
+                CreatedDate = register.CreatedDate
+            });
 
             return newUserDetail.UserDetailId;
         }

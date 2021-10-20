@@ -7,8 +7,8 @@ namespace BMSWebAPI.Models
 {
     public partial class UserAccountDetailModel
     {
-        public int UserAccountId { get; set; }
-        public int UserId { get; set; }
+        public string UserAccountId { get; set; }
+        public string UserId { get; set; }
         public string AccountNo { get; set; }
         public int AccountType { get; set; }
         public string BranchName { get; set; }

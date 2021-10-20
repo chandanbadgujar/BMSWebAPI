@@ -14,6 +14,7 @@ namespace BMS.Tests
         RegisterModel _registerModel;
         RegisterModelMock _registerModelMock;
         UserService _userService;
+        IUserAccountDetailService _userAccountService;
         public UserServiceUnitTests(BMSContext context)
         {
             _context = context;
@@ -22,7 +23,7 @@ namespace BMS.Tests
         [SetUp]
         public void Setup()
         {
-            _userService = new UserService(_context);
+            _userService = new UserService(_context, _userAccountService);
             _registerModelMock = new RegisterModelMock();
             _registerModel = _registerModelMock.getRegisterModel();
         }

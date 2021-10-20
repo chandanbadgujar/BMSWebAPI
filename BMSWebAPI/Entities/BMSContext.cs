@@ -27,7 +27,7 @@ namespace BMSWebAPI.Entities
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=DESKTOP-BRDIB2H\\SQLEXPRESS;Database=BMS;User Id=sa;Password=Anvi;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-BRDIB2H\\SQLEXPRESS;Database=BMS;User Id=sa;Password=Anvi;Trusted_Connection=True;");
             }
         }
 
@@ -99,6 +99,8 @@ namespace BMSWebAPI.Entities
             {
                 entity.HasKey(e => e.UserAccountId);
 
+                entity.Property(e => e.UserAccountId).HasMaxLength(20);
+
                 entity.Property(e => e.AccountNo)
                     .IsRequired()
                     .HasMaxLength(50)
@@ -133,6 +135,10 @@ namespace BMSWebAPI.Entities
                 entity.Property(e => e.ReferenceAddress)
                     .IsRequired()
                     .HasMaxLength(200);
+
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(10);
             });
 
             modelBuilder.Entity<UserDetail>(entity =>

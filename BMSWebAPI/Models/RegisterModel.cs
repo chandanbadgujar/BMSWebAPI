@@ -21,8 +21,14 @@ namespace BMSWebAPI.Models
         public int MaritalStatus { get; set; }
         public string ContactNo { get; set; }
         public DateTime Dob { get; set; }
-        public decimal? InitialDeposit { get; set; }
-        public int? AccountType { get; set; }
+        public int AccountType { get; set; }
+        public string BranchName { get; set; }
+        public decimal InitialDeposit { get; set; }
+        public int IdentificationType { get; set; }
+        public string IdentificationDocNo { get; set; }
+        public string ReferralAccountName { get; set; }
+        public string ReferralAccountNo { get; set; }
+        public string ReferralAccountAddress { get; set; }
         public DateTime? CreatedDate { get; set; }
     }
 }
