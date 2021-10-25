@@ -12,12 +12,12 @@ namespace BMSWebAPI.Helpers
     {
         private string secureKey = "This is a very secure Key.";
 
-        public string Generate(string id)
+        public string Generate(string username)
         {
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secureKey));
             var credentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256Signature);
             var header = new JwtHeader(credentials);
-            var payload = new JwtPayload(id, null, null, null, DateTime.Today.AddDays(1));
+            var payload = new JwtPayload(username, null, null, null, DateTime.Today.AddDays(1));
 
             var securityToken = new JwtSecurityToken(header, payload);
 

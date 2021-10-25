@@ -97,12 +97,9 @@ namespace BMSWebAPI.Entities
 
             modelBuilder.Entity<UserAccountDetail>(entity =>
             {
-                entity.HasKey(e => e.UserAccountId);
+                entity.HasKey(e => e.AccountId);
 
-                entity.Property(e => e.UserAccountId).HasMaxLength(20);
-
-                entity.Property(e => e.AccountNo)
-                    .IsRequired()
+                entity.Property(e => e.AccountId)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 

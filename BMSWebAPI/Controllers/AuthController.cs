@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BMSWebAPI.Helpers;
+﻿using BMSWebAPI.Helpers;
 using BMSWebAPI.Models;
 using BMSWebAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace BMSWebAPI.Controllers
 {
@@ -16,11 +13,14 @@ namespace BMSWebAPI.Controllers
     {
         JwtService _jwtService;
         IUserService _userService;
+        IAuthService _authService;
         public AuthController(JwtService jwtService,
-            IUserService userService)
+            IUserService userService,
+            IAuthService authService)
         {
             _jwtService = jwtService;
             _userService = userService;
+            _authService = authService;
         }
 
         [HttpPost]
@@ -49,11 +49,7 @@ namespace BMSWebAPI.Controllers
         {
             var jwt = Request.Cookies["jwt"];
 
-            var token = _jwtService.Verify(jwt);
-
-            string username = token?.Issuer;
-
-            var user = _userService.GetByUsername(username);
+            var user = _authService.GetUser(jwt);
 
             return Ok(user);
         }

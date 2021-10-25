@@ -36,6 +36,7 @@ namespace BMSWebAPI
             services.AddScoped<JwtService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserAccountDetailService, UserAccountDetailService>();
+            services.AddScoped<IAuthService, AuthService>();
 
             services.AddMvc();
             //.AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);

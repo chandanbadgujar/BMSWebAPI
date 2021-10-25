@@ -7,9 +7,8 @@ namespace BMSWebAPI.Entities
 {
     public partial class UserAccountDetail
     {
-        public string UserAccountId { get; set; }
+        public string AccountId { get; set; }
         public string UserId { get; set; }
-        public string AccountNo { get; set; }
         public int AccountType { get; set; }
         public string BranchName { get; set; }
         public decimal InitialDeposit { get; set; }

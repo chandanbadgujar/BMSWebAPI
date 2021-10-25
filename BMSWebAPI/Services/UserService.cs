@@ -107,7 +107,7 @@ namespace BMSWebAPI.Services
 
             _accountDetailService.Upsert(new UserAccountDetailModel() {
                 IdentityProofType = register.IdentificationType,
-                AccountNo = register.ReferralAccountNo,
+                AccountId = register.ReferralAccountNo,
                 AccountType = register.AccountType,
                 BranchName = register.BranchName,
                 IdentityProofDocNo = register.IdentificationDocNo,
