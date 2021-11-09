@@ -8,7 +8,7 @@ namespace BMSWebAPI.Services
 {
     public interface ILoanService
     {
-        LoanModel Get(int userId);
+        LoanModel Get(string userId);
         LoanModel Upsert(LoanModel loanModel);
     }
 }

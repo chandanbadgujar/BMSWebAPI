@@ -47,6 +47,8 @@ namespace BMSWebAPI.Entities
 
                 entity.Property(e => e.CourseFee).HasColumnType("decimal(18, 3)");
 
+                entity.Property(e => e.CreatedBy).HasMaxLength(20);
+
                 entity.Property(e => e.CreatedDate).HasColumnType("date");
 
                 entity.Property(e => e.Designation).HasMaxLength(50);
@@ -61,9 +63,7 @@ namespace BMSWebAPI.Entities
 
                 entity.Property(e => e.LoanIssueDate).HasColumnType("date");
 
-                entity.Property(e => e.ModifiedBy)
-                    .HasMaxLength(10)
-                    .IsFixedLength(true);
+                entity.Property(e => e.ModifiedBy).HasMaxLength(20);
 
                 entity.Property(e => e.ModifiedDate).HasColumnType("date");
 

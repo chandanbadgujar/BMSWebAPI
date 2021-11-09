@@ -15,9 +15,9 @@ namespace BMSWebAPI.Services
             _context = context;
         }
 
-        public LoanModel Get(int userId)
+        public LoanModel Get(string userId)
         {
-            var loan = _context.Loans.FirstOrDefault(x => x.UserId.Equals(userId));
+            var loan = _context.Loans.FirstOrDefault(x => x.UserId == userId);
 
             return new LoanModel() { 
                 UserId= loan.UserId,
@@ -45,6 +45,8 @@ namespace BMSWebAPI.Services
 
         public LoanModel Upsert(LoanModel loanModel)
         {
+            var existingLoan = _context.Loans.FirstOrDefault(x => x.UserId == loanModel.UserId && x.LoanType == loanModel.LoanType);
+            
             Loan loan = new Loan()
             {
                 UserId = loanModel.UserId,
@@ -64,19 +66,22 @@ namespace BMSWebAPI.Services
                 RationCardNo = loanModel.RationCardNo,
                 TotalExp = loanModel.TotalExp,
                 LoanIssueDate = loanModel.LoanIssueDate,
-                LoanType = loanModel.LoanType,
-                CreatedDate = loanModel.CreatedDate
+                LoanType = loanModel.LoanType
             };
 
-            if (loanModel.LoanId > 0)
+            if (existingLoan != null)
             {
                 loan.LoanId = loanModel.LoanId;
-                loanModel.ModifiedDate = DateTime.Now;
+                loan.ModifiedDate = DateTime.Now;
+                loan.ModifiedBy = loanModel.UserId;
 
                 _context.Loans.Update(loan);
             }
             else
             {
+                loan.CreatedDate = DateTime.Now;
+                loan.CreatedBy = loanModel.UserId;
+
                 _context.Loans.Add(loan);
 
             }

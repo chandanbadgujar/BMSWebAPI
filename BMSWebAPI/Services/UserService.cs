@@ -47,26 +47,6 @@ namespace BMSWebAPI.Services
             return user.UserId;
         }
 
-        private string GenerateCustomerId()
-        {
-            return "R-" + new Random().Next(100, 999);
-        }
-
-        private bool IsValidateInitialDeposit(int accountType, decimal initialDeposit)
-        {
-            bool isValid = true;
-
-            if ((accountType == (int)AccountType.Savings &&
-                initialDeposit < Configurations.savingsInitialDepositAmountLimit) ||
-                (accountType == (int)AccountType.Salary &&
-                initialDeposit < Configurations.salaryInitialDepositAmountLimit))
-            {
-                isValid = false;
-            }
-
-            return isValid;
-        }
-
         public int Register(RegisterModel register)
         {
             if (!IsValidateInitialDeposit(register.AccountType, register.InitialDeposit))
@@ -128,5 +108,26 @@ namespace BMSWebAPI.Services
             
             return result;
         }
+
+        private string GenerateCustomerId()
+        {
+            return "R-" + new Random().Next(100, 999);
+        }
+
+        private bool IsValidateInitialDeposit(int accountType, decimal initialDeposit)
+        {
+            bool isValid = true;
+
+            if ((accountType == (int)AccountType.Savings &&
+                initialDeposit < Configurations.savingsInitialDepositAmountLimit) ||
+                (accountType == (int)AccountType.Salary &&
+                initialDeposit < Configurations.salaryInitialDepositAmountLimit))
+            {
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
     }
 }

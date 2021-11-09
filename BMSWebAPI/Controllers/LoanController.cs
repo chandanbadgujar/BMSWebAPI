@@ -14,17 +14,28 @@ namespace BMSWebAPI.Controllers
     public class LoanController : ControllerBase
     {
         ILoanService _loanService;
+        IAuthService _authService;
 
-        public LoanController(ILoanService loanService)
+        public LoanController(ILoanService loanService,
+            IAuthService authService)
         {
             _loanService = loanService;
+            _authService = authService;
         }
 
         [HttpGet]
         [Route("GetLoanDetail")]
-        public IActionResult Get(int userId)
+        public IActionResult Get()
         {
-            var loan = _loanService.Get(userId);
+            var jwt = Request.Cookies["jwt"];
+            LoanModel loan = new LoanModel();
+
+            if (!string.IsNullOrEmpty(jwt))
+            {
+                var user = _authService.GetUser(jwt);
+
+                loan = _loanService.Get(user.UserId);
+            }
 
             return Ok(loan);
         }
@@ -32,7 +43,18 @@ namespace BMSWebAPI.Controllers
         [HttpPost]
         public IActionResult Post(LoanModel loanModel)
         {
-            var loan = _loanService.Upsert(loanModel);
+            var jwt = Request.Cookies["jwt"];
+            LoanModel loan = new LoanModel();
+
+            if (!string.IsNullOrEmpty(jwt))
+            {
+                var user = _authService.GetUser(jwt);
+
+                loanModel.UserId = user.UserId;
+                loanModel.CreatedBy = user.UserId;
+
+                loan = _loanService.Upsert(loanModel);
+            }
 
             return Ok(loan);
         }
