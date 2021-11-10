@@ -19,6 +19,11 @@ namespace BMSWebAPI.Services
         {
             var loan = _context.Loans.FirstOrDefault(x => x.UserId == userId);
 
+            if (loan == null)
+            {
+                return new LoanModel();
+            }
+
             return new LoanModel() { 
                 UserId= loan.UserId,
                 CompanyName= loan.CompanyName,
