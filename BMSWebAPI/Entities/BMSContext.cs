@@ -88,7 +88,7 @@ namespace BMSWebAPI.Entities
 
                 entity.Property(e => e.Password)
                     .IsRequired()
-                    .HasMaxLength(100);
+                    .HasMaxLength(1000);
 
                 entity.Property(e => e.Username)
                     .IsRequired()
@@ -144,12 +144,11 @@ namespace BMSWebAPI.Entities
                     .IsRequired()
                     .HasMaxLength(500);
 
-                entity.Property(e => e.BankName).HasMaxLength(50);
+                entity.Property(e => e.BankName).HasMaxLength(100);
 
                 entity.Property(e => e.ContactNo)
                     .IsRequired()
-                    .HasMaxLength(10)
-                    .IsFixedLength(true);
+                    .HasMaxLength(500);
 
                 entity.Property(e => e.CreatedDate).HasColumnType("date");
 
@@ -157,8 +156,7 @@ namespace BMSWebAPI.Entities
 
                 entity.Property(e => e.Email)
                     .IsRequired()
-                    .HasMaxLength(10)
-                    .IsFixedLength(true);
+                    .HasMaxLength(500);
 
                 entity.Property(e => e.GuardianName)
                     .IsRequired()
@@ -167,7 +165,7 @@ namespace BMSWebAPI.Entities
                 entity.Property(e => e.InitialDeposit).HasColumnType("decimal(18, 3)");
 
                 entity.Property(e => e.ModifiedBy)
-                    .HasMaxLength(10)
+                    .HasMaxLength(100)
                     .IsFixedLength(true);
 
                 entity.Property(e => e.ModifiedDate).HasColumnType("date");

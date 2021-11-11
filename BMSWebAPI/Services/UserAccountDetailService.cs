@@ -78,14 +78,17 @@ namespace BMSWebAPI.Services
             {
                 accountDetail.AccountId = userAccountDetailModel.AccountId;
                 accountDetail.ModifiedDate = DateTime.Now;
+                
+                UpdateUserDetails(userAccountDetailModel);
 
                 _context.UserAccountDetails.Update(accountDetail);
+
             }
             else
             {
                 accountDetail.AccountId = GenerateAccountId();
-                _context.UserAccountDetails.Add(accountDetail);
 
+                _context.UserAccountDetails.Add(accountDetail);
             }
 
             _context.SaveChanges();
@@ -95,7 +98,44 @@ namespace BMSWebAPI.Services
                 userAccountDetailModel.AccountId = accountDetail.AccountId;
             }
 
+
             return userAccountDetailModel;
+        }
+
+        private void UpdateUserDetails(UserAccountDetailModel userAccountDetailModel)
+        {
+            var existingUserDetails = _context.UserDetails.FirstOrDefault(x => x.UserId == userAccountDetailModel.UserId);
+
+            existingUserDetails.Name = userAccountDetailModel.Name;
+            existingUserDetails.GuardianType = userAccountDetailModel.GuardianType;
+            existingUserDetails.GuardianName = userAccountDetailModel.GuardianName;
+            existingUserDetails.Gender = userAccountDetailModel.Gender;
+            existingUserDetails.MaritalStatus = userAccountDetailModel.MaritalStatus;
+            existingUserDetails.Dob = userAccountDetailModel.Dob;
+            existingUserDetails.ContactNo = userAccountDetailModel.ContactNo;
+            existingUserDetails.Email = userAccountDetailModel.Email;
+            existingUserDetails.Address = userAccountDetailModel.Address;
+            existingUserDetails.CitizenshipType = userAccountDetailModel.CitizenshipType;
+            existingUserDetails.Country = userAccountDetailModel.Country;
+            existingUserDetails.State = userAccountDetailModel.State;
+            existingUserDetails.BankName = userAccountDetailModel.BankName;
+
+            if (existingUserDetails == null)
+            {
+                existingUserDetails.CreatedDate = DateTime.Now;
+
+                _context.UserDetails.Add(existingUserDetails);
+            }
+            else
+            {
+                existingUserDetails.ModifiedDate = DateTime.Now;
+                existingUserDetails.ModifiedBy = userAccountDetailModel.UserId;
+
+                _context.UserDetails.Update(existingUserDetails);
+            }
+
+
+            _context.SaveChanges();
         }
 
         private string GenerateAccountId()
